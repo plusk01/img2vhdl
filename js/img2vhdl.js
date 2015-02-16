@@ -43,6 +43,12 @@ var img2vhdl = img2vhdl || (function() {
         this.colors = {};   // each binary color as a property that houses
                             // an array of point objects (x, y of each pixel)
 
+        this.colorMaps = {
+            'r': colorMapR,
+            'g': colorMapG,
+            'b': colorMapB
+        }
+
         _this = this;
 
     }
@@ -59,7 +65,7 @@ var img2vhdl = img2vhdl || (function() {
         for (var i=0; i < pix.length; i += 4) {
             // calculate the current row, col (x, y)
             var row = Math.floor(pixelCount / _width);
-            var col = i % _height;
+            var col = pixelCount % _width;
             
             // Color correct to 8-bit VGA
             var redCorrect = constrain(Math.round(pix[i]/colorStep['r'])*colorStep['r'], 255);
@@ -119,21 +125,22 @@ var img2vhdl = img2vhdl || (function() {
 
             if (bits === longest) continue;
 
-            var expr = "when ";
+            var expr = "\t\t\twhen ";
             var LINEBREAK_ON = 6;
             for (var i=0; i<this.colors[bits].length; i++) {
-                if (i !== 0 && (i % LINEBREAK_ON) === 0) expr += "\n\t\t";
+                if (i !== 0 && (i % LINEBREAK_ON) === 0) expr += "\n\t\t\t\t  ";
+
                 expr += "\"" + concatBinary(this.colors[bits][i]) + "\"";
 
                 if (i === (this.colors[bits].length-1)) {
-                    expr += " =>\n";
+                    expr += " =>\n\t\t\t\t";
                 } else {
                     expr += "|";
                 }
             }
 
-            expr += "red <= \"" + bits.substr(0,3) + "\";\n";
-            expr += "green <= \"" + bits.substr(3,3) + "\";\n";
+            expr += "red <= \"" + bits.substr(0,3) + "\";\n\t\t\t\t";
+            expr += "green <= \"" + bits.substr(3,3) + "\";\n\t\t\t\t";
             expr += "blue <= \"" + bits.substr(6,2) + "\";\n";
 
             vhdl += expr + "\n\n";
@@ -152,6 +159,13 @@ var img2vhdl = img2vhdl || (function() {
 
         var blob = new Blob([vhdl], {type: "text/plain;charset=utf-8"});
         saveAs(blob, filename);
+    };
+
+    img2vhdl.prototype.findDuplicates = function() {
+
+        for (var bits in this.colors) {
+
+        }
     };
 
 
