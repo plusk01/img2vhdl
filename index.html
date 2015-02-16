@@ -4,14 +4,108 @@
     <title>img2vhdl - 8-bit VGA images</title>
 
     <link rel="stylesheet" type="text/css" href="lib/bootstrap-3.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/font-awesome-4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
 
+    <script type="text/javascript" src="lib/jquery-2.1.3.min.js"></script>
     <script type="text/javascript" src="lib/bootstrap-3.3.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="lib/FileSaver.js"></script>
     <script type="text/javascript" src="js/img2vhdl.js"></script>
-    <script type="text/javascript" src="js/main.js"></script>
 </head>
 <body>
 
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">img2vhdl</a>
+          <p class="navbar-text">8-bit color VGA</p>
+        </div>
+
+        <div class="navbar-right">
+            <p class="navbar-text"><i class="fa fa-github fa-2x"></i>&nbsp;&nbsp;<a href="https://github.com/plusk01/img2vhdl" target="_blank">View project on GitHub</a></p>
+        </div>
+
+      </div>
+    </nav>
+
+    <div class="row img-row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6">
+
+            <canvas id="canvas"></canvas>
+
+        </div>
+        <div class="col-xs-6"></div>
+    </div>
+
+    <div class="row controls-row">
+        <div class="col-xs-3"></div>
+        <div class="col-xs-6">
+
+            <div class="buttons">
+                <button class="btn btn-info" onclick="loadImage()"><i class="fa fa-picture-o"></i> Load Picture</button>
+                <button class="btn btn-warning" onclick="colorize()" id="btnColorize" disabled="disabled">8-bit Colorize!</button>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#vhdlModal" id="btnGetVHDL" disabled="disabled"><i class="fa fa-code"></i> Get VHDL</button>
+            </div>
+
+            <!-- Hidden File Input -->
+            <input type="file" class="hidden" id="fileInput">
+
+        </div>
+        <div class="col-xs-6"></div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="vhdlModal" tabindex="-1" role="dialog" aria-labelledby="vhdlModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="vhdlModalLabel">Get the VHDL File</h4>
+                </div>
+
+                <div class="modal-body">
+
+                    <h3 class="modal-h3">How to use</h3>
+
+                    <p>To use this VHDL file, place an entity component declaration in the architecture body of your top level VHDL file. The entity declaration is shown below.</p>
+
+                    <p>This VHDL module expects that <code>pixel_x</code> and <code>pixel_y</code> are inputs and that <code>red</code>, <code>green</code>, and <code>blue</code> are outputs.</p>
+
+                    <p><code>pixel_x</code> and <code>pixel_y</code> are the current location on the 640x480 VGA screen and <code>red</code>, <code>green</code>, and <code>blue</code> are the corresponding colors at that pixel location.</p>
+
+                    <p>This code presupposes that you have a <code>vga_timing</code> module available that runs a 640x480px VGA display from a 25MHz clock. This was written for and tested on the <a href="http://www.xilinx.com/support/index.html/content/xilinx/en/supportNav/silicon_devices/fpga/spartan-3e.html">Xilinx Spartan-3E</a>. You can download a <code>vga_timing</code> module below.</p>
+
+                    <br><br>
+
+                    <pre>
+img: entity work.img2vhdl
+    port map(
+        pixel_x=>pixel_x, pixel_y=>pixel_y,
+        red=>myRed,green=>myGreen,blue=>myBlue
+    );
+                    </pre>
+
+                    <br>
+
+                    <div class="form-group">
+                        <label for="filename">VHDL File Name (*.vhd)</label>
+                        <input type="text" id="filename" class="form-control" placeholder="img2vhdl.vhd">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <a href="/vga_timing.vhd" class="btn btn-warning pull-left"><i class="fa fa-download"></i> vga_timing.vhd</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="getVHDL()"><i class="fa fa-download"></i> Download '<span id="vhdlFileName">img2vhdl.vhd</span>'</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>

@@ -1,0 +1,29 @@
+.img-row {
+    margin-top: 5%;
+}
+
+#canvas {
+    border: 1px solid black;
+    margin: 0 10%;
+}
+
+.buttons {
+    width: 640px;
+    margin: 0 10%;
+}
+
+.buttons button:first-child {
+    margin-left: 0.5%;
+}
+
+.buttons button {
+    margin: 0 11%;
+}
+
+.buttons button:last-child {
+    margin-right: 0;
+}
+
+.modal-h3 {
+    margin-top: 0;
+}
