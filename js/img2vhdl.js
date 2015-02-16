@@ -119,7 +119,6 @@ var img2vhdl = img2vhdl || (function() {
         var vhdl = "";
 
         var longest = getLongestColorBits();
-        console.log(longest)
 
         for (var bits in this.colors) {
 
